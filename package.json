@@ -1,0 +1,41 @@
+{
+  "name": "TooSmallForMultiples",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
+  "repository": "https://github.com/mattbrehmer/TooSmallForMultiples",
+  "author": "mattbrehmer",
+  "license": "MIT",
+  "engines": {
+    "node": "8.9.4",
+    "npm": "5.6.0"
+  },
+  "dependencies": {
+    "clipboard": "^1.7.1",
+    "csv-loader": "^2.1.1",
+    "d3": "^4.9.1",
+    "d3-rect": "^1.0.1",
+    "express": "^4.16.4",
+    "flubber": "^0.4.2",
+    "pre-loader": "^0.5.0",
+    "socket.io": "2.1.1",
+    "socket.io-client": "2.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^3.6.1",
+    "jshint": "^2.9.6",
+    "jshint-loader": "^0.8.4",
+    "serve": "^6.4.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-middleware": "^1.12.2",
+    "webpack-dev-server": "^2.11.3"
+  },
+  "optionalDependencies": {
+    "d3": "^4.9.1",
+    "moment": "^2.22.2"
+  },
+  "scripts": {
+    "start": "concurrently --kill-others \"webpack --watch --display-error-details\" \"node app.js\" &",
+    "watch": "webpack-dev-server --inline --colors"
+  }
+}

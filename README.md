@@ -1,3 +1,20 @@
+# Mo'Bubble
+
+A demonstration of orientation, tilt, and gesture based interaction with dynamic data visualization on mobile phones.
+
+## Setup / Testing
+
+1. Open a terminal and navigate to this directory
+
+2. Ensure that [nodejs](https://nodejs.org/) and the [yarn package manager](https://yarnpkg.com/en/docs/getting-started) are installed
+
+3. Install the necessary packages with the `yarn` command
+
+4. Start the node server with: `npm start`
+
+5. Open [localhost:8080](http://localhost:8080/) in Chrome. For emulating a mobile usage environment, launch the Chrome debugger (`CTRL + SHIFT + J`) and toggle the device emulator (`CTRL + SHIFT + M`); select your desired mobile device. Note that the application will only be visible in portrait mode in the mobile emulator. 
+
+6. ??
 
 # Contributing
 
