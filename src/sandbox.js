@@ -29,40 +29,6 @@ function sandbox () {
     .style('height',svg_dim + 'px')
     .style('width',svg_dim + 'px');
 
-    if (window.location.href.indexOf('mobubble') != -1) {
-      d3.select('#selector_div')
-      .style('height', function(){
-      if (height < width) {
-        d3.select('#annotation_div').style('height',(height - 20) + 'px');
-        return (height) + 'px';
-      }
-      else {
-        var menubar_height = non_interactive ? (width / 7) : 0;
-        var remaining_height = height - svg_dim - menubar_height - 10; 
-        d3.select('#annotation_div').style('height',(remaining_height - 20) + 'px');
-        return (remaining_height) + 'px';
-      }
-      })
-      .style('width', function(){
-        if (height < width) {
-          var menubar_width = non_interactive ? (height / 7) : 0;
-          var remaining_width = width - svg_dim - menubar_width; 
-          d3.select('#annotation_div').style('width',(remaining_width - 20) + 'px');
-          return (remaining_width) + 'px';
-        }
-        else {        
-          d3.select('#annotation_div').style('width',(width - 20) + 'px');
-          return (width) + 'px';
-        }      
-      })
-      .style('float', (height < width) ? 'right' : 'unset')
-      .style('left', (height < width) ? (svg_dim) + 'px' : 'unset');
-
-      d3.select('#carousel_svg').style('width',d3.select('#selector_div').style('width'));
-      d3.select('#carousel_svg').style('height',d3.select('#selector_div').style('height'));
-      
-    }
-
     chart_g.attr('transform','translate(' + inner_padding + ',' + inner_padding + ')');
   
     d3.selectAll('.guide').remove();
@@ -74,12 +40,8 @@ function sandbox () {
     chart_g.call(chart_instance);
     chart_g.call(chart_instance);
 
-    if (window.location.href.indexOf('mobubble') != -1) { 
-
-      carousel_g.datum([]);
-      carousel_g.call(carousel_instance);
-
-    }
+    carousel_g.datum([]);
+    carousel_g.call(carousel_instance);
   
     d3.selectAll('.toolbar')
     .style('position','absolute')
@@ -210,29 +172,25 @@ function sandbox () {
     }, 100); // check every 100ms
 
     chart_instance = chart();
-    if (window.location.href.indexOf('mobubble') != -1) {
-      carousel_instance = carousel();
-    }
+    carousel_instance = carousel();
   
     main_svg = d3.select('#main_svg').remove();
   
     main_svg = d3.select('#sandbox_div').append('svg')
     .attr('id','main_svg');  
 
-    if (window.location.href.indexOf('mobubble') != -1) {
-      carousel_svg = d3.select('#carousel_svg').remove();
+    carousel_svg = d3.select('#carousel_svg').remove();
+  
+    carousel_svg = d3.select('#selector_div').append('svg')
+    .attr('id','carousel_svg');  
     
-      carousel_svg = d3.select('#selector_div').append('svg')
-      .attr('id','carousel_svg');  
-      
-      carousel_g = carousel_svg.append('g')
-      .attr('id','carousel_g').style('display','inline');    
-      
-      d3.select('#selector_div').append('div')
-      .attr('id','annotation_div')
-      .style('display','none')
-      .html('<span class="annotation"></span>');
-    }
+    carousel_g = carousel_svg.append('g')
+    .attr('id','carousel_g').style('display','inline');    
+    
+    d3.select('#selector_div').append('div')
+    .attr('id','annotation_div')
+    .style('display','none')
+    .html('<span class="annotation"></span>');
   
     defs = d3.select('#main_svg').append('defs');
   
@@ -279,24 +237,6 @@ function sandbox () {
   }     
   loadData(); 
 
-  function exitHandler () {
-    if (window.location.href.indexOf('mobubble') == -1){
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "Event": "SandBox_Closed",
-        "user_id": globals.userID
-      };
-      console.log("SandBox_Closed", globals.log_message);
-      appInsights.trackEvent("SandBox_Closed", globals.log_message);
-     
-      document.getElementById('sandbox_div').remove();
-      if (document.getElementById('selector_div') != undefined) {      
-        document.getElementById('selector_div').remove();                    
-      } 
-      loadMenu();
-      hideAddressBar();   
-    }    
-  }
 
   if (non_interactive) {
     var menubar = d3.select('#sandbox_div').append('div')
@@ -313,7 +253,6 @@ function sandbox () {
     .attr('src', 'assets/fullscreen.png')
     .on('touchstart',function(){
       d3.event.preventDefault();
-      exitHandler();
     });
   
     menubar.append("input")
@@ -458,9 +397,7 @@ function sandbox () {
       clearInterval(checkTouch);
     });    
   }
-  else if (window.location.href.indexOf('mobubble') != -1) {
-    chart_instance.tilt('on');
-  }
+  chart_instance.tilt('on');
 
 }
 

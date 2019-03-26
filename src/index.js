@@ -4,80 +4,10 @@ var preLoader = require('pre-loader');
 var globals = require("./globals");
 var initTasks = require("./initTasks");
 var sandbox = require("./sandbox");
-var consent = require("./consent");
-var introduction = require("./introduction");
-var questionnaire = require("./questionnaire");
-var trial = require("./trial");
 var countrySelector = require("./countrySelector");
-var menu = require("./menu");    
 globals.userID = '1218_' + new Date().valueOf(); // CHANGE FOR PRODUCTION
 
-if (window.location.href.indexOf('mobubble') == -1) {  
-
-  if (window.location.href.indexOf('localhost') == -1) {
-    var socket = io.connect({
-      transports: ['websocket'],
-      reconnect: true
-    });
-  }
-  else {
-    var socket = io.connect({
-      transports: ['websocket'],
-      reconnect: true
-    });
-  }
-
-  socket.on('new_connection', function(msg) {
-    console.log('new_connection', msg);
-  });
-  
-  socket.on('new_participant', function(msg) {
-    console.log('new_participant', msg);
-    if (msg.user_id == globals.userID) {
-      globals.participant = msg.participant;
-      globals.condition = msg.condition;
-      globals.ordering = msg.ordering;
-      initTasks();
-      loadMenu();
-    }
-  });
-
-  socket.on('departure', function(msg) {
-    console.log('departure: ', msg);
-  });
-
-  socket.on('completion', function(msg) {
-    console.log('completion: ', msg);
-  });
-  
-}
-else {
-  initTasks();
-}
-
-
-function setCookie (c_name, value, exdays)
-{
-  var exdate = new Date();
-  exdate.setDate(exdate.getDate() + exdays);
-  var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-  document.cookie = c_name + "=" + c_value;
-}
-
-function getCookie (c_name)
-{
-   var i,x,y,ARRcookies=document.cookie.split(";");
-   for (i=0;i<ARRcookies.length;i++)
-    {
-       x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-          x=x.replace(/^\s+|\s+$/g,"");
-          if (x==c_name)
-          {
-              return unescape(y);
-          }
-    }
- }
+initTasks();
 
 scale_tilt_time = d3.scaleLinear();
 
@@ -106,10 +36,6 @@ appInsights.queue.push(function () {
     envelope.data.baseData.properties = envelope.data.baseData.properties || {};
     envelope.data.baseData.properties.clientWidth = window.innerWidth;
     envelope.data.baseData.properties.clientHeight = window.innerHeight;
-
-    // // To set custom metrics:
-    // telemetryItem.measurements = telemetryItem.measurements || {};
-    // telemetryItem.measurements["globalMetric"] = 100;
   });
 });
 
@@ -174,22 +100,7 @@ window.addEventListener('load', function() {
     'resumption_time': new Date().valueOf() + 1,
     'pause_time': globals.last_pause,
     'pause_duration': 1
-  }); //app resumed
-
-  if (window.location.href.indexOf('mobubble') == -1 && window.innerHeight < window.innerWidth) {
-    
-    d3.select('body').append('input')
-    .attr('id','landscape_btn')
-    .attr('type','button')
-    .style('color','#111')
-    .style('background','#ef5350')
-    .style('border-color','#fff')
-    .attr('value','Hold your phone in portrait mode.')
-    .attr('title','Hold your phone in portrait mode.')
-    .on('touchstart', function() {  
-      d3.select('#landscape_btn').remove();
-    }); 
-  }
+  }); //app resumed  
   
 });  
 
@@ -252,87 +163,21 @@ window.onresize = function(e) {
     document.getElementById('landscape_btn').remove();
   }
   hideAddressBar();
-
-  if (window.location.href.indexOf('mobubble') == -1) {
-    if (window.innerHeight < window.innerWidth) {
-      if (resumptions[resumptions.length - 1].resumption_time > globals.last_pause) {
-        globals.last_pause = new Date().valueOf(); //app paused
-      }
-
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "user_id": globals.userID, 
-        "Event": "Resized",
-        "Width": window.innerWidth, 
-        "Height": window.innerHeight,
-        "Mode": 'landscape' 
-      };
-      
-      console.log("Resized", globals.log_message);
-      appInsights.trackEvent("Resized", globals.log_message);
   
-      d3.select('body').append('input')
-      .attr('id','landscape_btn')
-      .attr('type','button')
-      .style('color','#111')
-      .style('background','#ef5350')
-      .style('border-color','#fff')
-      .attr('value','Hold your phone in portrait mode.')
-      .attr('title','Hold your phone in portrait mode.')
-      .on('touchstart', function() {  
-        d3.select('#landscape_btn').remove();
-      });        
-      
+  var checkOrientation = setInterval(function() {
+    if (window.innerHeight < window.innerWidth && d3.select('#selector_div').style('height') != window.innerHeight + 'px') {
+      orientation_changed = false;
+      changeOrientation();    
+    }
+    else if (window.innerHeight > window.innerWidth && d3.select('#selector_div').style('width') != window.innerWidth + 'px') {
+      orientation_changed = false;
+      changeOrientation();
     }
     else {
-      d3.select('#landscape_btn').remove();
-      if (document.getElementById('landscape_btn')) {
-        document.getElementById('landscape_btn').remove();
-      }
-      var r_time = new Date().valueOf();
-      if (globals.last_pause > resumptions[resumptions.length - 1].resumption_time) {
-        resumptions.push({
-          'resumption_time': r_time,
-          'pause_time': globals.last_pause,
-          'pause_type': 'orientation',
-          'pause_duration': r_time - globals.last_pause
-        }); //app resumed
-      }
-
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "user_id": globals.userID, 
-        "Event": "Resized",
-        "Width": window.innerWidth, 
-        "Height": window.innerHeight,
-        "Orientation": 'portrait',
-        'resumption_time': r_time,
-        'pause_time': globals.last_pause,
-        'pause_type': 'orientation',
-        'pause_duration': r_time - globals.last_pause
-      };
-      
-      console.log("Resized", globals.log_message);
-      appInsights.trackEvent("Resized", globals.log_message);
-  
+      orientation_changed = true;
+      clearInterval(checkOrientation);
     }
-  }
-  else {    
-    var checkOrientation = setInterval(function() {
-      if (window.innerHeight < window.innerWidth && d3.select('#selector_div').style('height') != window.innerHeight + 'px') {
-        orientation_changed = false;
-        changeOrientation();    
-      }
-      else if (window.innerHeight > window.innerWidth && d3.select('#selector_div').style('width') != window.innerWidth + 'px') {
-        orientation_changed = false;
-        changeOrientation();
-      }
-      else {
-        orientation_changed = true;
-        clearInterval(checkOrientation);
-      }
-    }, 100);        
-  }
+  }, 100);        
 };
 
 function changeOrientation () {
@@ -433,9 +278,7 @@ function changeOrientation () {
   d3.select('#carousel_svg').style('height',d3.select('#selector_div').style('height'));
 
   chart_g.call(chart_instance); 
-  if (window.location.href.indexOf('mobubble') != -1) { 
-    carousel_g.call(carousel_instance);            
-  }
+  carousel_g.call(carousel_instance);            
 
   globals.log_message = { 
     "TimeStamp": new Date().valueOf(),
@@ -524,7 +367,7 @@ function tiltHandler(event) {
       var param_pop = chart_instance.params().radius;
       var scale_pop = chart_instance.scale_pop();
       
-      if (tilt_counter % 5) {
+      if (tilt_counter % 10) {
         chart_instance.tilt_selection(tilt_selection);      
         d3.selectAll('.country_btn_enabled')
         .style('border', function(d){
@@ -692,8 +535,6 @@ d3.select("body")
 
     case 27: // test override on 'Esc' and load menu
       test_override = true;
-      consent_complete = true;
-      introduction_complete = true;
 
       globals.trial_index = -1;
 
@@ -727,12 +568,8 @@ d3.select("body")
         console.log("TestOverride_Load_Menu", globals.log_message);
         appInsights.trackEvent("TestOverride_Load_Menu", globals.log_message);
 
-        if (window.location.href.indexOf('mobubble') == -1){
-          loadMenu();
-        }
-        else {
-          loadSandbox();
-        }         
+        
+        loadSandbox();
         hideAddressBar();
       }           
     break;    
@@ -765,205 +602,17 @@ loadSandbox = function () {
   hideAddressBar(); 
 };
 
-loadMenu = function () {
-  
-  menu(); 
-
-  d3.select('#consent_btn')
-  .on('touchstart', function() {    
-    if (test_override || !consent_complete) {
-      document.getElementById('menu_div').remove();
-      
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "user_id": globals.userID,
-        "Event": "ConsentStart",
-        "ordering": globals.ordering,
-        "condition": globals.condition,
-        "Width": window.innerWidth, 
-        "Height": window.innerHeight,
-        "Scene": 0
-      };
-      
-      console.log("ConsentStart", globals.log_message);
-      appInsights.trackEvent("ConsentStart", globals.log_message);
-      
-      consent(0);
-      hideAddressBar();
-    }  
-  });
-
-  d3.select('#introduction_btn')
-  .on('touchstart', function() {      
-    if (test_override || (!introduction_complete && consent_complete)) {
-      document.getElementById('menu_div').remove();
-      
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "user_id": globals.userID,
-        "Event": "IntroStart",
-        "Scene": 0
-      };
-      
-      console.log("IntroStart", globals.log_message);
-      appInsights.trackEvent("IntroStart", globals.log_message);
-      
-      introduction(0);
-      hideAddressBar();
-    }
-  });
-
-  d3.select('#trial_btn')
-  .on('touchstart', function() {
-
-    if (test_override || introduction_complete) {
-      globals.trial_index = -1;  
-      non_interactive = true;
-      test_override = false;  
-      
-      switch (globals.condition) {
-  
-        case 'stepper':
-  
-          globals.animation = 'off';
-          globals.lines = 'off';
-          globals.facets = 'off';
-          break;
-  
-        case 'animation':
-  
-          globals.animation = 'on';
-          globals.lines = 'off';
-          globals.facets = 'off';
-          break;
-  
-        case 'multiples':
-  
-          globals.animation = 'off';
-          globals.lines = 'on';
-          globals.facets = 'on';
-          break;
-  
-        default:
-  
-          globals.animation = 'off';
-          globals.lines = 'off';
-          globals.facets = 'off';
-          break;
-      }   
-
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "Event": "Experiment_Start",
-        "condition": globals.condition,
-        "ordering": globals.ordering,
-        "user_id": globals.userID,
-        "Width": window.innerWidth, 
-        "Height": window.innerHeight
-      };
-      
-      console.log("Experiment_Start", globals.log_message);
-      appInsights.trackEvent("Experiment_Start", globals.log_message);
-  
-      document.getElementById('menu_div').remove();   
-      trial();  
-      countrySelector();
-      hideAddressBar();   
-    }
-  });
-
-  d3.select('#questionnaire_btn')
-  .on('touchstart', function() {    
-    if (test_override || experiment_complete) {
-      document.getElementById('menu_div').remove();
-
-      globals.log_message = { 
-        "TimeStamp": new Date().valueOf(),
-        "user_id": globals.userID,
-        "Event": "SurveyStart",
-        "condition": globals.condition,
-        "ordering": globals.ordering,
-        "Width": window.innerWidth, 
-        "Height": window.innerHeight,
-        "Scene": 0
-      };
-      
-      console.log("SurveyStart", globals.log_message);
-      appInsights.trackEvent("SurveyStart", globals.log_message);
-
-      socket.emit('questionnaire', globals.userID);
-      questionnaire(0);
-      hideAddressBar();
-    }  
-  });
-
-  d3.select('#secret_sandbox')
-  .on('touchstart', function() {  
-    document.getElementById('menu_div').remove(); 
-    globals.trial_index = 0;
-    non_interactive = true;
-    test_override = true;    
-
-    globals.log_message = { 
-      "TimeStamp": new Date().valueOf(),
-      "Event": "SandBox_Open",
-      "user_id": globals.userID
-    };
-    
-    console.log("SandBox_Open", globals.log_message);
-    appInsights.trackEvent("SandBox_Open", globals.log_message);
-
-    sandbox();
-    hideAddressBar();   
-  });
+globals.log_message = { 
+  "TimeStamp": new Date().valueOf(),
+  "Event": "NewParticipant",
+  "userAgent": navigator.userAgent,
+  "user_id": globals.userID
 };
 
- if (getCookie('visited')) {
-  // alert('You have already participated in this study.'); //COMMENT FOR TESTING
+console.log("NewParticipant", globals.log_message);
+appInsights.trackEvent("NewParticipant", globals.log_message);
 
-  globals.log_message = { 
-    "TimeStamp": new Date().valueOf(),
-    "Event": "RepeatParticipant",
-    "userAgent": navigator.userAgent,
-    "user_id": globals.userID
-  };
-  
-  console.log("RepeatParticipant", globals.log_message);
-  appInsights.trackEvent("RepeatParticipant", globals.log_message);
-
-  if (window.location.href.indexOf('mobubble') == -1){
-    socket.emit('userID', {
-      userID: globals.userID,
-      userAgent: navigator.userAgent
-    }); //COMMENT FOR PRODUCTION
-  }
-  else {
-    loadSandbox(); 
-  }
- }
- else {
-  setCookie('visited',1,365);
-
-   globals.log_message = { 
-    "TimeStamp": new Date().valueOf(),
-    "Event": "NewParticipant",
-    "userAgent": navigator.userAgent,
-    "user_id": globals.userID
-  };
-  
-  console.log("NewParticipant", globals.log_message);
-  appInsights.trackEvent("NewParticipant", globals.log_message);
-
-  if (window.location.href.indexOf('mobubble') == -1){
-    socket.emit('userID', {
-      userID: globals.userID,
-      userAgent: navigator.userAgent
-    });
-  }
-  else {
-    loadSandbox();
-  }
- }
+loadSandbox();
 
 d3.select('body').append('svg')
 .style('display','none')

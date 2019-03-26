@@ -865,18 +865,18 @@ d3.chart = function () {
         .call(position)
         .sort(order);
 
-        voronoi_cells.data(function(){
-          var arr = interpolateData(year);
-          var tmp = voronoi.polygons(arr);   
-          for (var i = 0; i < tmp.length; i++) {
-            if (tmp[i] == undefined){
-              tmp[i] = [[0,0],[0,0],[0,0],[0,0]];
-              tmp[i].data = arr[i];
-            }
-          }     
-          return tmp;       
-        })
-        .call(redrawPolygon);
+        // voronoi_cells.data(function(){
+        //   var arr = interpolateData(year);
+        //   var tmp = voronoi.polygons(arr);   
+        //   for (var i = 0; i < tmp.length; i++) {
+        //     if (tmp[i] == undefined){
+        //       tmp[i] = [[0,0],[0,0],[0,0],[0,0]];
+        //       tmp[i].data = arr[i];
+        //     }
+        //   }     
+        //   return tmp;       
+        // })
+        // .call(redrawPolygon);
 
         /** 
          * 
@@ -1053,14 +1053,14 @@ d3.chart = function () {
         return scale_y(d.param_y); 
       });
 
-      var voronoi = d3.voronoi()
-      .x(function(d) { 
-        return scale_x(d[params.x]); 
-      })
-      .y(function(d) { 
-        return scale_y(d[params.y]); 
-      })
-      .extent([[0, 0], [chart_dim, chart_dim]]);
+      // var voronoi = d3.voronoi()
+      // .x(function(d) { 
+      //   return scale_x(d[params.x]); 
+      // })
+      // .y(function(d) { 
+      //   return scale_y(d[params.y]); 
+      // })
+      // .extent([[0, 0], [chart_dim, chart_dim]]);
 
       function repeat() {
         if (animation == 'on') {            
@@ -1119,36 +1119,36 @@ d3.chart = function () {
 
       // VORONOI PATHS
 
-      var voronoi_cells = this_chart.selectAll("path")
-      .data(function(){
-        var arr = interpolateData(params.yearMin);
-        var tmp = voronoi.polygons(arr);   
-        for (var i = 0; i < tmp.length; i++) {
-          if (tmp[i] == undefined){
-            tmp[i] = [[0,0],[0,0],[0,0],[0,0]];
-            tmp[i].data = arr[i];
-          }
-        }     
-        return tmp;
-      });
+      // var voronoi_cells = this_chart.selectAll("path")
+      // .data(function(){
+      //   var arr = interpolateData(params.yearMin);
+      //   var tmp = voronoi.polygons(arr);   
+      //   for (var i = 0; i < tmp.length; i++) {
+      //     if (tmp[i] == undefined){
+      //       tmp[i] = [[0,0],[0,0],[0,0],[0,0]];
+      //       tmp[i].data = arr[i];
+      //     }
+      //   }     
+      //   return tmp;
+      // });
 
-      voronoi_cells.enter()
-      .append('path')
-      .attr("class", function(d) {         
-        return "voronoi_" + d.data[params.key]; 
-      })
-      .style("stroke", non_interactive ? "transparent" : "#666") //If you want to look at the cells
-      .style("opacity", 0.1) //If you want to look at the cells
-      .style("stroke-dasharray", "0.2em")
-      .style("fill", "none")
-      .style("pointer-events", "all")      
-      .on('touchstart', function(d){ 
-        d3.event.preventDefault(); 
-        touchdown(d.data[params.key]);
-      }) 
-      .on('touchend',touchend);  
+      // voronoi_cells.enter()
+      // .append('path')
+      // .attr("class", function(d) {         
+      //   return "voronoi_" + d.data[params.key]; 
+      // })
+      // .style("stroke", non_interactive ? "transparent" : "#666") //If you want to look at the cells
+      // .style("opacity", 0.1) //If you want to look at the cells
+      // .style("stroke-dasharray", "0.2em")
+      // .style("fill", "none")
+      // .style("pointer-events", "all")      
+      // .on('touchstart', function(d){ 
+      //   d3.event.preventDefault(); 
+      //   touchdown(d.data[params.key]);
+      // }) 
+      // .on('touchend',touchend);  
 
-      voronoi_cells.call(redrawPolygon);
+      // voronoi_cells.call(redrawPolygon);
 
       // FACETS
 
@@ -2035,24 +2035,22 @@ d3.chart = function () {
 
       function updateCarousel() {
 
-        if (window.location.href.indexOf('mobubble') != -1) { 
-          carousel_g.datum(highlight_points);
-          carousel_instance.carousel_focus(Math.floor((highlight_points.length - 1) / 2));
+        carousel_g.datum(highlight_points);
+        carousel_instance.carousel_focus(Math.floor((highlight_points.length - 1) / 2));
+        carousel_g.call(carousel_instance);
+        setTimeout(function(){
           carousel_g.call(carousel_instance);
-          setTimeout(function(){
-            carousel_g.call(carousel_instance);
-          }, 275);
-          if (caption_text != "") {
-            d3.select('#annotation_div').style('display',null);            
-            d3.selectAll('.carousel_item').style('display','none');       
-            d3.selectAll('.carousel_clutch').style('display','none');
-          }
-          else {
-            d3.select('#annotation_div').style('display','none');            
-            if (highlight_points.length > 0) {
-              d3.selectAll('.carousel_item').style('display','inline');       
-              d3.selectAll('.carousel_clutch').style('display','inline');             
-            }
+        }, 275);
+        if (caption_text != "") {
+          d3.select('#annotation_div').style('display',null);            
+          d3.selectAll('.carousel_item').style('display','none');       
+          d3.selectAll('.carousel_clutch').style('display','none');
+        }
+        else {
+          d3.select('#annotation_div').style('display','none');            
+          if (highlight_points.length > 0) {
+            d3.selectAll('.carousel_item').style('display','inline');       
+            d3.selectAll('.carousel_clutch').style('display','inline');             
           }
         }
       }

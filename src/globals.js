@@ -20,9 +20,6 @@ var globals = {
   all_data: u,  
   hideAddressBar: u,
   shuffle: u,
-  consent_complete: u,
-  introduction_complete: u,
-  experiment_complete: u,
   test_override: u,  
   touch_value: u,
   suppress_touch_feedback: u,
@@ -64,9 +61,6 @@ var globals = {
 };
 
 test_override = false;
-consent_complete = false;
-introduction_complete = false;
-experiment_complete = false;
 resumptions = [];
 suppress_touch_feedback = false;
 suppress_touch_val_feedback = false;
