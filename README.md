@@ -1,4 +1,4 @@
-# Mo'Bubble
+# Tilt Interaction For Mobile Visualization
 
 A demonstration of orientation, tilt, and gesture based interaction with dynamic data visualization on mobile phones.
 
