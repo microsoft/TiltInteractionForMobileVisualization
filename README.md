@@ -1,6 +1,8 @@
 # Tilt Interaction For Mobile Visualization
 
-A demonstration of orientation, tilt, and gesture based interaction with dynamic data visualization on mobile phones.
+A demonstration of orientation, tilt, and gesture based interaction with dynamic data visualization on mobile phones by [Matthew Brehmer (Microsoft Research)](mailto:mattbrehmer@gmail.com), [Bongshin Lee (Microsoft Research)](mailto:bongshin@microsoft.com), [Ken Hinckley (Microsoft Research)](mailto:kenh@microsoft.com), and [Christopher Collins (Ontario Tech University)](mailto:Christopher.Collins@uoit.ca). 
+
+<img src="images/mobubble.png" title="Tilting, Brushing, & Dialing Interactions for Data Visualization on Mobile Phones"  alt="Tilting, Brushing, & Dialing Interactions for Data Visualization on Mobile Phones: Y-axis tilting in portrait or landscape; X-axis tilting for list navigation." style="width: 100%;"/>
 
 ## Setup / Testing
 
@@ -14,7 +16,7 @@ A demonstration of orientation, tilt, and gesture based interaction with dynamic
 
 5. Open [localhost:8080](http://localhost:8080/) in Chrome. For emulating a mobile usage environment, launch the Chrome debugger (`CTRL + SHIFT + J`) and toggle the device emulator (`CTRL + SHIFT + M`); select your desired mobile device. Note that the application will only be visible in portrait mode in the mobile emulator. 
 
-6. ??
+<img src="images/mobubble-screenshots.png" title="Tilting, Brushing, & Dialing Interactions for Data Visualization on Mobile Phones"  alt="Tilting, Brushing, & Dialing Interactions for Data Visualization on Mobile Phones: Y-axis tilting in portrait or landscape; X-axis tilting for list navigation." style="width: 100%;"/>
 
 # Contributing
 
