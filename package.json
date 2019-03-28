@@ -1,10 +1,10 @@
 {
-  "name": "Mobubble",
+  "name": "TiltInteractionForMobileVisualization",
   "version": "0.1.0",
   "description": "",
   "main": "app.js",
-  "repository": "https://github.com/mattbrehmer/TooSmallForMultiples",
-  "author": "mattbrehmer",
+  "repository": "https://github.com/Microsoft/TiltInteractionForMobileVisualization",
+  "author": "Microsoft",
   "license": "MIT",
   "engines": {
     "node": "8.9.4",

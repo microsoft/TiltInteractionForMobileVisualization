@@ -45,25 +45,17 @@ non_interactive = true;
 
 window.addEventListener('load', function() { 
 
-  imagesArray = [
-    "assets/battery.svg",
-    "assets/brightness.svg",
+  imagesArray = [    
     "assets/done.svg",
-    "assets/fullscreen.png",
     "assets/grid.svg",
-    "assets/holdingphone.svg",
     "assets/line.svg",
     "assets/na.svg",
     "assets/next_gold.svg",
     "assets/next.svg",
-    "assets/nonav.svg",
     "assets/play.svg",
-    "assets/portrait.svg",
     "assets/prev_gold.svg",
     "assets/prev_grey.svg",
-    "assets/prev.svg",
-    "assets/tilt.svg",
-    "assets/wifi.svg"
+    "assets/prev.svg"
   ];
 
   new preLoader(imagesArray, {

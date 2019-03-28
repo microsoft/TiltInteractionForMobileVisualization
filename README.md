@@ -6,9 +6,9 @@ A demonstration of orientation, tilt, and gesture based interaction with dynamic
 
 1. Open a terminal and navigate to this directory
 
-2. Ensure that [nodejs](https://nodejs.org/) and the [yarn package manager](https://yarnpkg.com/en/docs/getting-started) are installed
+2. Ensure that [nodejs](https://nodejs.org/) is installed
 
-3. Install the necessary packages with the `yarn` command
+3. Install the necessary packages with the `npm install` command
 
 4. Start the node server with: `npm start`
 
