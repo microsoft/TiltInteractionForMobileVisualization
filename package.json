@@ -32,7 +32,7 @@
   },
   "optionalDependencies": {
     "d3": "^4.9.1",
-    "moment": "^2.22.2"
+    "moment": "^2.29.2"
   },
   "scripts": {
     "start": "concurrently --kill-others \"webpack --watch --display-error-details\" \"node app.js\" &",
