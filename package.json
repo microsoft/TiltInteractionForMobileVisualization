@@ -13,7 +13,7 @@
   "dependencies": {
     "clipboard": "^1.7.1",
     "csv-loader": "^2.1.1",
-    "d3": "^4.9.1",
+    "d3": "^7.6.1",
     "d3-rect": "^1.0.1",
     "express": "^4.16.4",
     "flubber": "^0.4.2",
@@ -31,7 +31,7 @@
     "webpack-dev-server": "^2.11.3"
   },
   "optionalDependencies": {
-    "d3": "^4.9.1",
+    "d3": "^7.6.1",
     "moment": "^2.22.2"
   },
   "scripts": {
