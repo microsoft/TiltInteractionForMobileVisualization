@@ -25,7 +25,7 @@
     "concurrently": "^3.6.1",
     "jshint": "^2.9.6",
     "jshint-loader": "^0.8.4",
-    "serve": "^6.4.1",
+    "serve": "^14.2.0",
     "webpack": "^3.10.0",
     "webpack-dev-middleware": "^1.12.2",
     "webpack-dev-server": "^2.11.3"
