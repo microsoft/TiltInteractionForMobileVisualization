@@ -28,7 +28,7 @@
     "serve": "^6.4.1",
     "webpack": "^3.10.0",
     "webpack-dev-middleware": "^1.12.2",
-    "webpack-dev-server": "^2.11.3"
+    "webpack-dev-server": "^4.13.3"
   },
   "optionalDependencies": {
     "d3": "^4.9.1",
