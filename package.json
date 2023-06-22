@@ -22,13 +22,13 @@
     "socket.io-client": "2.1.1"
   },
   "devDependencies": {
-    "concurrently": "^3.6.1",
+    "concurrently": "^8.2.0",
     "jshint": "^2.9.6",
     "jshint-loader": "^0.8.4",
     "serve": "^6.4.1",
-    "webpack": "^3.10.0",
+    "webpack": "^5.88.0",
     "webpack-dev-middleware": "^1.12.2",
-    "webpack-dev-server": "^2.11.3"
+    "webpack-dev-server": "^4.15.1"
   },
   "optionalDependencies": {
     "d3": "^4.9.1",
